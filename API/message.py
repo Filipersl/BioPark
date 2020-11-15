@@ -1,4 +1,3 @@
-from database import open_connection, close_connection, create_schedule, read_schedules, delete_scedule
 class Message:
     def __init__(self, date, recipient, text, type, id):
         self.date = date
@@ -22,19 +21,3 @@ class Message:
             return True
         else: 
             return False
-
-def append_message(message):
-    con = open_connection('localhost', 'root','', 'Schedules')
-    create_schedule(con, message)
-    close_connection(close_connection)
-
-def get_messages():
-    con = open_connection('localhost', 'root','', 'Schedules')
-    allMessages = read_schedules(con)
-    close_connection(close_connection)
-    return allMessages
-
-def delete_message(message):
-    con = open_connection('localhost', 'root','', 'Schedules')
-    delete_scedule(con, message)
-    close_connection(close_connection)

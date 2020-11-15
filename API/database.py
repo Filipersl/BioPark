@@ -7,26 +7,19 @@ def open_connection(host, user, password, database):
         print('Conectado ao servidor MySQL')
         return connection
     else:
-        print('Não conseguimos conexão')
+        print('Nao conseguimos conexao')
 
 def close_connection(connection):
     if connection.is_connected():
         cursor = connection.cursor()
         cursor.close()
         connection.close()
-        print('Conexão fechada')
+        print('Conexao fechada')
     else:
-        print('Não existe conexão')
+        print('Nao existe conexao')
 
-def create_schedule(connection, message):
-    cursor = connection.cursor()
-    sql = "INERT INTO message (date, recipient, text, type) values (%s, %s, %s, %s)"
-    values = (message['date'], message['recipient'], message['text'], message['type'])
-    cursor.execute(sql, values)
-    cursor.close()
-    connection.commit()
-
-def read_schedules(connection):
+def read_db_schedules():
+    connection = open_connection('localhost', 'root','', 'Schedules')
     cursor = connection.cursor()
     sql = "SELECT id, date, recipient, text, type from message;"
     cursor.execute(sql)
@@ -34,12 +27,26 @@ def read_schedules(connection):
     for (id, date, recipient, text, type) in cursor:
         allMessages.append(Message(date, recipient, text, type, id))
     cursor.close()
+    close_connection(connection)
     return allMessages
 
-def delete_scedule(connection, message): 
+def delete_db_schedule(message): 
+    connection = open_connection('localhost', 'root','', 'Schedules')
     cursor = connection.cursor()
     sql = "DELETE FROM message WHERE id = %d"
     values = (message['id'])
     cursor.execute(sql, values)
     cursor.close()
     connection.commit()
+    close_connection(connection)
+
+def create_db_schedule(message):
+    connection = open_connection('localhost', 'root','', 'Schedules')
+    cursor = connection.cursor()
+    sql = "INERT INTO message (date, recipient, text, type) values (%s, %s, %s, %s)"
+    values = (message['date'], message['recipient'], message['text'], message['type'])
+    cursor.execute(sql, values)
+    cursor.close()
+    connection.commit()
+    close_connection(connection)
+    
