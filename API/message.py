@@ -1,12 +1,15 @@
+from database import open_connection, close_connection, create_schedule, read_schedules, delete_scedule
 class Message:
-    def __init__(self, date, recipient, text, type):
+    def __init__(self, date, recipient, text, type, id):
         self.date = date
         self.recipient = recipient
         self.text = text
         self.type = type
+        self.id = id
     
     def json_map(self):
         json_message = {
+            'id' : self.id,
             "date" : self.date, 
             "recipient" : self.recipient, 
             "text" : self.text,
@@ -15,16 +18,23 @@ class Message:
         return json_message
 
     def compare(self, message):
-        if self.date == message.date:
-            if self.recipient == message.recipient:
-                if self.text == message.text:
-                    if self.type == message.type:
-                        return True
-        return False
-
-#Globais temporarias
-
-allMessages = [Message("10/10/2012", "teste@teste.com", "Bom dia", "E-mail")]
+        if self.id == message.id:
+            return True
+        else: 
+            return False
 
 def append_message(message):
-    allMessages.append(message)
+    con = open_connection('localhost', 'root','', 'Schedules')
+    create_schedule(con, message)
+    close_connection(close_connection)
+
+def get_messages():
+    con = open_connection('localhost', 'root','', 'Schedules')
+    allMessages = read_schedules(con)
+    close_connection(close_connection)
+    return allMessages
+
+def delete_message(message):
+    con = open_connection('localhost', 'root','', 'Schedules')
+    delete_scedule(con, message)
+    close_connection(close_connection)
